@@ -151,5 +151,24 @@ void main(void)
 	color.rgb += screen_space_dither(gl_FragCoord.xy);
 #endif
 
+    // ==========================================
+    // 🔥 BİZİM SİNEMATİK HACK KODUMUZ BURADA BAŞLIYOR 🔥
+    // ==========================================
+    
+    // 1. VIGNETTE (Kenar Karartma) - Odak noktasını merkeze alır
+    vec2 ekranMerkezi = varTexCoord.st - 0.5;
+    float vignette = 1.0 - dot(ekranMerkezi, ekranMerkezi) * 1.2; 
+    vignette = clamp(vignette, 0.0, 1.0);
+    color.rgb *= vignette;
+    
+    // 2. COLOR GRADING (Sinematik Renk ve Kontrast)
+    color.rgb = (color.rgb - 0.5) * 1.1 + 0.5; // Kontrastı %10 artırır
+    color.rgb *= vec3(0.95, 0.98, 1.05); // Hafif soğuk, modern oyun tonu verir
+    
+    // ==========================================
+    // 🔥 HACK BİTİŞİ 🔥
+    // ==========================================
+
 	gl_FragColor = vec4(color.rgb, 1.0); // force full alpha to avoid holes in the image.
 }
+
