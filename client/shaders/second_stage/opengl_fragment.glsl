@@ -152,16 +152,22 @@ void main(void)
 #endif
 
     // ==========================================
-    // 🔥 BİZİM SİNEMATİK HACK KODUMUZ BURADA BAŞLIYOR 🔥
+    // 🔥 BİZİM GELİŞMİŞ SİNEMATİK & BLOOM HACK KODUMUZ 🔥
     // ==========================================
     
-    // 1. VIGNETTE (Kenar Karartma) - Odak noktasını merkeze alır
+    // 1. FORCED BLOOM (Işık Parlama Efekti)
+    // Motorun arka planda oluşturduğu hazır ışık dokusunu çekiyoruz
+    vec3 parlamaIsigi = texture2D(bloom, varTexCoord.st).rgb;
+    // Işığın şiddetini 1.6 kat artırarak orijinal renklerin üzerine ekliyoruz
+    color.rgb += parlamaIsigi * 1.6; 
+    
+    // 2. VIGNETTE (Kenar Karartma) - Odak noktasını merkeze alır
     vec2 ekranMerkezi = varTexCoord.st - 0.5;
     float vignette = 1.0 - dot(ekranMerkezi, ekranMerkezi) * 1.2; 
     vignette = clamp(vignette, 0.0, 1.0);
     color.rgb *= vignette;
     
-    // 2. COLOR GRADING (Sinematik Renk ve Kontrast)
+    // 3. COLOR GRADING (Sinematik Renk ve Kontrast)
     color.rgb = (color.rgb - 0.5) * 1.1 + 0.5; // Kontrastı %10 artırır
     color.rgb *= vec3(0.95, 0.98, 1.05); // Hafif soğuk, modern oyun tonu verir
     
